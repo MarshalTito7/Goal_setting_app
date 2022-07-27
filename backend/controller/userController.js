@@ -82,8 +82,8 @@ const loginUser = asynchandler(async (req,res) => {
 
 // @desc    Get user data
 // @route   GET /api/users/me
-// @access  Public
-
+// @access  Private
+// We will use this to protect the routes
 const getMe = asynchandler(async(req,res) => {
     res.json({
         message : 'User data display'
