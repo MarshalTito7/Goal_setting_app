@@ -58,9 +58,24 @@ const registerUser = asynchandler( async(req,res) => {
 // @access  Public
 
 const loginUser = asynchandler(async (req,res) => {
-    res.json({
-        message : 'Login User'
-    })
+    const {email, password} = req.body
+
+    // Check for user email
+    const user = await User.findOne({email})
+
+    if (user && await bcrypt.compare(password, user.password))
+    // The password is stored in hashed format in the database...the user while logging in provides the normal password and then we need to compare it with the hashed password
+    {
+        res.json({
+            _id: user.id,
+            name: user.name,
+            email: user.email
+        })
+    }   else{
+        res.status(400)
+        throw new Error('Invalid Credentials')
+    }
+    
 })
 
 // @desc    Get user data
