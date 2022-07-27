@@ -43,14 +43,15 @@ const registerUser = asynchandler( async(req,res) => {
         res.status(201).json({
             _id: user.id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            token : generateToken(user._id)
         })
     }
     else{
         res.status(400)
         throw new Error('Invalid User Data')
     }
-
+    
 })
 
 // @desc    Authenticate a user
@@ -59,17 +60,18 @@ const registerUser = asynchandler( async(req,res) => {
 
 const loginUser = asynchandler(async (req,res) => {
     const {email, password} = req.body
-
+    
     // Check for user email
     const user = await User.findOne({email})
-
+    
     if (user && await bcrypt.compare(password, user.password))
     // The password is stored in hashed format in the database...the user while logging in provides the normal password and then we need to compare it with the hashed password
     {
         res.json({
             _id: user.id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            token : generateToken(user._id)
         })
     }   else{
         res.status(400)
@@ -87,6 +89,14 @@ const getMe = asynchandler(async(req,res) => {
         message : 'User data display'
     })
 })
+
+// Generate JWT
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '30d'
+        // This token will expire in 30 days
+    })
+}
 
 module.exports = {
     registerUser,
