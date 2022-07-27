@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema({
         unique: true
         // We set unique to true because we don't want two same email addresses
     },
-    Password: {
+    password: {
         type: String,
         required : [true, 'Please add a password']
     }
