@@ -85,8 +85,12 @@ const loginUser = asynchandler(async (req,res) => {
 // @access  Private
 // We will use this to protect the routes
 const getMe = asynchandler(async(req,res) => {
-    res.json({
-        message : 'User data display'
+    const {_id, name, email} = await User.findById(req.user.id)
+
+    res.status(200).json({
+        id: _id,
+        name,
+        email
     })
 })
 
